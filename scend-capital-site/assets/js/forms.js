@@ -23,31 +23,31 @@ const SCEND_SHEETS_CONFIG = {
 
   // Main contact / enquiry form  →  Sheet tab: "Enquiries"
   contact: {
-    url: 'https://script.google.com/macros/s/YOUR_CONTACT_SCRIPT_ID/exec',
+    url: 'https://script.google.com/macros/s/AKfycbxjSTFTnZ6QAGKr_-KvQEOPAKAb-mGnVaHFlGUalm5lLfDtNcr3uCeWojJt55U0n7YA/exec',
     sheetName: 'Enquiries',
   },
 
   // Investor-specific fields     →  Sheet tab: "Investors"
   investor: {
-    url: 'https://script.google.com/macros/s/YOUR_INVESTOR_SCRIPT_ID/exec',
+    url: 'https://script.google.com/macros/s/AKfycbxjSTFTnZ6QAGKr_-KvQEOPAKAb-mGnVaHFlGUalm5lLfDtNcr3uCeWojJt55U0n7YA/exec',
     sheetName: 'Investors',
   },
 
   // Entrepreneur-specific fields →  Sheet tab: "Entrepreneurs"
   entrepreneur: {
-    url: 'https://script.google.com/macros/s/YOUR_ENTREPRENEUR_SCRIPT_ID/exec',
+    url: 'https://script.google.com/macros/s/AKfycbxjSTFTnZ6QAGKr_-KvQEOPAKAb-mGnVaHFlGUalm5lLfDtNcr3uCeWojJt55U0n7YA/exec',
     sheetName: 'Entrepreneurs',
   },
 
   // Deal scout fields            →  Sheet tab: "Scouts"
   scout: {
-    url: 'https://script.google.com/macros/s/YOUR_SCOUT_SCRIPT_ID/exec',
+    url: 'https://script.google.com/macros/s/AKfycbxjSTFTnZ6QAGKr_-KvQEOPAKAb-mGnVaHFlGUalm5lLfDtNcr3uCeWojJt55U0n7YA/exec',
     sheetName: 'Scouts',
   },
 
   // General enquiry              →  Sheet tab: "General"
   general: {
-    url: 'https://script.google.com/macros/s/YOUR_GENERAL_SCRIPT_ID/exec',
+    url: 'https://script.google.com/macros/s/AKfycbxjSTFTnZ6QAGKr_-KvQEOPAKAb-mGnVaHFlGUalm5lLfDtNcr3uCeWojJt55U0n7YA/exec',
     sheetName: 'General',
   },
 };
