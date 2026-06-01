@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Scend Capital — Structured Micro-Capital · Gauteng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ TOKENS ═══════════════ */
+:root{
+  --gold:      #9C833A;
+  --gold-2:    #b09640;
+  --gold-3:    #c8ac58;
+  --gold-dim:  rgba(156,131,58,.09);
+  --gold-rule: rgba(156,131,58,.24);
+  --gold-pale: #f9f5e8;
+
+  --ink:   #111111;
+  --ink-2: #232323;
+  --ink-3: #4a4a4a;
+  --ink-4: #7a7a7a;
+  --ink-5: #aaaaaa;
+
+  --white: #ffffff;
+  --off:   #fafaf8;
+  --g1:    #f5f4f1;
+  --g2:    #eae8e3;
+  --g3:    #d2cfc8;
+  --g4:    #b0ada6;
+
+  --nav-h: 72px;
+  --pad:   clamp(1.25rem,5vw,3.5rem);
+  --max:   1220px;
+  --sec:   clamp(5rem,10vw,9rem);
+
+  --ease-out: cubic-bezier(.22,1,.36,1);
+  --spring:   cubic-bezier(.34,1.56,.64,1);
+  --t1:.18s; --t2:.42s; --t3:.7s;
+}
+
+/* ═══════════════ RESET ═══════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:'Outfit',system-ui,sans-serif;
+  font-weight:300;color:var(--ink);background:var(--white);
+  overflow-x:hidden;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Cormorant',Georgia,serif;line-height:1.1;font-weight:400}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{cursor:pointer;font-family:'Outfit',sans-serif;background:none;border:none}
+input,textarea,select{font-family:'Outfit',sans-serif}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--g1)}
+::-webkit-scrollbar-thumb{background:var(--g3);border-radius:3px}
+
+/* ═══════════════ LOGO HELPERS ═══════════════ */
+/* Dark bg — logo PNG has black bg, use screen to knock it out */
+.logo-on-dark{
+  mix-blend-mode:screen;
+  filter:brightness(1.1);
+}
+/* Light bg — invert the PNG so black bg becomes white, then remove white */
+.logo-on-light{
+  filter:invert(1) brightness(0.82) sepia(1) hue-rotate(5deg) saturate(2.5);
+  /* result: gold crescent + dark text on transparent-ish white bg */
+}
+/* Scrolled nav — need crisp on white: full invert + recolor */
+.logo-scrolled{
+  filter:invert(1) brightness(.1) sepia(1) hue-rotate(5deg) saturate(3) contrast(1.2);
+  /* This makes the whole logo dark/gold-ish. 
+     Simpler approach: use mix-blend-mode multiply on white bg */
+  mix-blend-mode:multiply;
+  filter:none;
+}
+
+/* ═══════════════ NAV ═══════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  height:var(--nav-h);padding:0 var(--pad);
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background var(--t2) var(--ease-out),
+             box-shadow var(--t2) var(--ease-out),
+             transform var(--t2) var(--ease-out);
+}
+#nav.scrolled{
+  background:rgba(255,255,255,.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 1px 0 var(--g2),0 4px 20px rgba(0,0,0,.04);
+}
+#nav.hide{transform:translateY(-100%)}
+
+/* nav logo */
+.nav-logo{display:flex;align-items:center;height:70px}
+.nav-logo-img{
+  height:66px;width:auto;
+  object-fit:contain;object-position:left center;
+  transition:filter var(--t2) var(--ease-out);
+}
+/* on dark hero: PNG has black bg — screen blend makes black transparent */
+.nav-logo-img{mix-blend-mode:screen;filter:brightness(1.05)}
+/* once nav turns white, revert blend and use multiply to keep logo visible */
+#nav.scrolled .nav-logo-img{mix-blend-mode:multiply;filter:none}
+
+/* links */
+.nav-links{display:flex;align-items:center;gap:0;list-style:none;margin-left:1.5rem}
+.nl{
+  font-size:12.5px;font-weight:400;letter-spacing:.05em;
+  color:rgba(255,255,255,.68);padding:8px 12px;
+  position:relative;transition:color var(--t1);
+}
+.nl::after{
+  content:'';position:absolute;bottom:4px;left:12px;right:12px;
+  height:1px;background:var(--gold-3);
+  transform:scaleX(0);transition:transform var(--t2) var(--ease-out);
+}
+.nl:hover{color:var(--white)}
+.nl:hover::after{transform:scaleX(1)}
+#nav.scrolled .nl{color:var(--ink-3)}
+#nav.scrolled .nl:hover{color:var(--ink)}
+#nav.scrolled .nl:hover::after{background:var(--gold)}
+
+.nav-cta{
+  margin-left:.75rem;
+  font-size:12px!important;font-weight:500!important;letter-spacing:.07em!important;
+  color:var(--white)!important;background:var(--gold)!important;
+  padding:9px 22px!important;border-radius:2px;
+  transition:background var(--t1),transform var(--t1) var(--spring),box-shadow var(--t1)!important;
+}
+.nav-cta:hover{background:var(--gold-2)!important;transform:translateY(-1px)!important;box-shadow:0 4px 14px rgba(156,131,58,.3)!important}
+.nav-cta::after{display:none!important}
+
+/* hamburger */
+.ham{
+  display:none;flex-direction:column;gap:5.5px;padding:8px;
+  align-items:center;justify-content:center;width:40px;height:40px;
+}
+.ham span{
+  display:block;width:20px;height:1.5px;background:var(--white);
+  transform-origin:center;
+  transition:transform var(--t2),opacity var(--t2),background var(--t1);
+}
+#nav.scrolled .ham span{background:var(--ink)}
+body.mopen .ham span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+body.mopen .ham span:nth-child(2){opacity:0;transform:scaleX(0)}
+body.mopen .ham span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile drawer */
+#mdrawer{
+  position:fixed;inset:0;z-index:800;
+  background:var(--white);border-bottom:3px solid var(--gold);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:var(--nav-h) var(--pad) var(--pad);
+  transform:translateY(-100%);
+  transition:transform var(--t3) var(--ease-out);pointer-events:none;
+}
+body.mopen #mdrawer{transform:translateY(0);pointer-events:all}
+#mdrawer a{
+  font-family:'Cormorant',serif;font-size:clamp(1.75rem,5vw,2.5rem);
+  color:var(--ink-4);padding:10px 0;border-bottom:1px solid var(--g2);
+  opacity:0;transform:translateY(10px);
+  transition:color var(--t1),opacity var(--t2) var(--ease-out),transform var(--t2) var(--ease-out);
+}
+#mdrawer a:last-of-type{border-bottom:none}
+body.mopen #mdrawer a{opacity:1;transform:none}
+body.mopen #mdrawer a:nth-child(1){transition-delay:.07s}
+body.mopen #mdrawer a:nth-child(2){transition-delay:.13s}
+body.mopen #mdrawer a:nth-child(3){transition-delay:.19s}
+body.mopen #mdrawer a:nth-child(4){transition-delay:.25s}
+body.mopen #mdrawer a:nth-child(5){transition-delay:.31s}
+body.mopen #mdrawer a:nth-child(6){transition-delay:.37s}
+#mdrawer a:hover{color:var(--ink)}
+#mdrawer .m-gold{color:var(--gold)!important;font-style:italic}
+
+/* ═══════════════ TICKER ═══════════════ */
+.ticker{
+  overflow:hidden;background:var(--white);
+  border-top:1px solid var(--gold-rule);border-bottom:1px solid var(--gold-rule);
+  padding:11px 0;
+}
+.ticker-track{
+  display:flex;gap:3.5rem;width:max-content;
+  animation:tick 36s linear infinite;will-change:transform;
+}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{
+  display:flex;align-items:center;gap:10px;white-space:nowrap;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:500;
+}
+.tdot{width:3px;height:3px;border-radius:50%;background:var(--gold);opacity:.4}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ═══════════════ HERO ═══════════════ */
+#hero{
+  min-height:100svh;background:var(--ink);
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+}
+/* subtle grid */
+.hero-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:linear-gradient(to bottom,transparent,black 18%,black 82%,transparent);
+}
+/* warm diagonal glow */
+.hero-glow{
+  position:absolute;top:-20%;right:-10%;
+  width:65%;height:120%;pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 60% 35%,rgba(156,131,58,.09) 0%,transparent 70%);
+}
+/* vertical gold rule */
+.hero-vr{
+  position:absolute;left:calc(var(--pad) + 48px);top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--gold-rule) 20%,var(--gold-rule) 80%,transparent);
+  transform:scaleY(0);transform-origin:top;
+  animation:drop 1.4s var(--ease-out) .5s forwards;
+}
+@keyframes drop{to{transform:scaleY(1)}}
+
+/* horizontal gold accent */
+.hero-hr{
+  position:absolute;left:0;right:0;
+  bottom:clamp(5.5rem,13vh,10rem);
+  height:1px;background:var(--gold-rule);
+  transform:scaleX(0);transform-origin:left;
+  animation:sweep 1.2s var(--ease-out) .8s forwards;
+}
+@keyframes sweep{to{transform:scaleX(1)}}
+
+.hero-inner{
+  position:relative;z-index:2;
+  max-width:var(--max);margin:0 auto;width:100%;
+  padding:calc(var(--nav-h) + clamp(3rem,8vh,5.5rem)) var(--pad) clamp(4.5rem,12vh,8rem);
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;
+  align-items:end;min-height:100svh;
+}
+.hero-left{padding-bottom:.5rem}
+
+.hero-eyebrow{
+  display:flex;align-items:center;gap:10px;margin-bottom:1.8rem;
+  opacity:0;animation:aup .6s var(--ease-out) .3s forwards;
+}
+.he-line{width:28px;height:1px;background:var(--gold-3)}
+.he-text{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-3);font-weight:500}
+
+.hero-h1{
+  font-size:clamp(2.5rem,5.5vw,4.8rem);color:var(--white);
+  margin-bottom:1.6rem;font-weight:300;
+  opacity:0;animation:aup .9s var(--ease-out) .42s forwards;
+  line-height:1.05;
+}
+.hero-h1 em{
+  font-style:italic;font-weight:300;
+  -webkit-text-fill-color:transparent;
+  background:linear-gradient(90deg,var(--gold),var(--gold-3));
+  -webkit-background-clip:text;background-clip:text;
+}
+
+.hero-p{
+  font-size:clamp(.875rem,1.5vw,.965rem);color:rgba(255,255,255,.48);
+  line-height:1.78;max-width:460px;margin-bottom:2.4rem;
+  opacity:0;animation:aup .9s var(--ease-out) .56s forwards;
+}
+.hero-btns{
+  display:flex;gap:.85rem;flex-wrap:wrap;
+  opacity:0;animation:aup .9s var(--ease-out) .7s forwards;
+}
+
+/* right stat rail */
+.hero-right{
+  align-self:end;padding-bottom:.5rem;
+  opacity:0;animation:aright .9s var(--ease-out) .84s forwards;
+}
+.sr-label{
+  font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.26);
+  font-weight:500;padding-bottom:.75rem;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.sr-items{display:flex;flex-direction:column}
+.sr-item{
+  padding:1.1rem 0 1.1rem 1.25rem;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  border-left:2px solid transparent;
+  position:relative;transition:background var(--t2);cursor:default;
+}
+.sr-item::before{
+  content:'';position:absolute;left:-2px;top:0;bottom:0;width:2px;
+  background:var(--gold);transform:scaleY(0);transform-origin:bottom;
+  transition:transform var(--t2) var(--ease-out);
+}
+.sr-item:last-child{border-bottom:none}
+.sr-item:hover::before{transform:scaleY(1)}
+.sr-val{
+  font-family:'Cormorant',serif;font-size:clamp(1.45rem,2.4vw,2rem);
+  color:var(--white);line-height:1;margin-bottom:.3rem;font-weight:300;
+}
+.sr-val em{font-style:normal;color:var(--gold-3)}
+.sr-lbl{font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.04em}
+
+/* mobile stats */
+.hero-stats-m{
+  display:none;grid-template-columns:1fr 1fr;gap:1px;
+  background:rgba(255,255,255,.07);margin-top:2rem;
+}
+.hsm{background:rgba(255,255,255,.03);padding:.85rem 1rem}
+.hsm-v{font-family:'Cormorant',serif;font-size:1.5rem;color:var(--white);line-height:1;margin-bottom:.2rem;font-weight:300}
+.hsm-v em{font-style:normal;color:var(--gold-3)}
+.hsm-l{font-size:10px;color:rgba(255,255,255,.33);letter-spacing:.04em}
+
+/* scroll cue */
+.hero-scroll{
+  position:absolute;bottom:2rem;left:calc(var(--pad) + 48px);
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  color:rgba(255,255,255,.22);z-index:3;
+  opacity:0;animation:aup .6s var(--ease-out) 1.7s forwards;
+}
+.hs-t{font-size:8px;letter-spacing:.24em;text-transform:uppercase}
+.hs-l{
+  width:1px;height:38px;
+  background:linear-gradient(to bottom,rgba(255,255,255,.24),transparent);
+  animation:spulse 2.5s ease-in-out infinite;
+}
+@keyframes aup{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes aright{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+@keyframes spulse{0%,100%{opacity:.4;transform:scaleY(.85)}50%{opacity:1;transform:scaleY(1.1)}}
+
+/* ═══════════════ BUTTONS ═══════════════ */
+.btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:clamp(11px,2vw,13px) clamp(20px,3vw,28px);
+  font-size:12.5px;font-weight:500;letter-spacing:.05em;
+  border-radius:2px;cursor:pointer;font-family:'Outfit',sans-serif;
+  transition:transform var(--t1) var(--spring),box-shadow var(--t1),background var(--t1),color var(--t1),border-color var(--t1);
+}
+.btn:active{transform:scale(.98)!important}
+.btn-gold{background:var(--gold);color:var(--white);border:1.5px solid var(--gold)}
+.btn-gold:hover{background:var(--gold-2);border-color:var(--gold-2);transform:translateY(-2px);box-shadow:0 6px 18px rgba(156,131,58,.28)}
+.btn-ghost-w{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,.28)}
+.btn-ghost-w:hover{border-color:rgba(255,255,255,.65);background:rgba(255,255,255,.06);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--g3)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);transform:translateY(-1px)}
+.btn-dark{background:var(--ink);color:var(--white);border:1.5px solid var(--ink)}
+.btn-dark:hover{background:var(--ink-2);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.18)}
+
+/* ═══════════════ METRICS BAND ═══════════════ */
+#metrics{background:var(--g1);border-bottom:1px solid var(--g2)}
+.metrics-grid{
+  max-width:var(--max);margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-left:1px solid var(--g2);
+}
+.mc{
+  padding:2rem var(--pad);border-right:1px solid var(--g2);
+  position:relative;overflow:hidden;transition:background var(--t2) var(--ease-out);
+}
+.mc::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-3));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform var(--t2) var(--ease-out);
+}
+.mc:hover{background:var(--white)}
+.mc:hover::after{transform:scaleX(1)}
+.mc-val{
+  font-family:'Cormorant',serif;font-size:clamp(1.9rem,3vw,2.5rem);
+  color:var(--ink);line-height:1;margin-bottom:.4rem;font-weight:300;
+}
+.mc-val .mcu{color:var(--gold);font-size:1.5rem}
+.mc-lbl{font-size:10.5px;color:var(--ink-4);letter-spacing:.08em;text-transform:uppercase}
+.mc-note{font-size:.75rem;color:var(--ink-5);margin-top:.2rem}
+
+/* ═══════════════ LAYOUT ═══════════════ */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+.sec-tag{display:flex;align-items:center;gap:10px;margin-bottom:.9rem}
+.stl{width:24px;height:2px;background:var(--gold);flex-shrink:0}
+.stt{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.sec-h{font-size:clamp(1.9rem,4vw,3rem);color:var(--ink);margin-bottom:.9rem;font-weight:300}
+.sec-h em{font-style:italic;color:var(--gold)}
+.sec-sub{font-size:clamp(.875rem,1.6vw,.975rem);color:var(--ink-3);line-height:1.75;font-weight:300;max-width:520px}
+
+/* ═══════════════ ABOUT ═══════════════ */
+#about{padding:var(--sec) 0;background:var(--white)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2.5rem,6vw,6rem);align-items:start}
+.pillar{
+  display:grid;grid-template-columns:22px 1fr;gap:1rem;
+  padding:1.2rem 0;border-bottom:1px solid var(--g2);
+}
+.pillar:first-child{border-top:1px solid var(--g2)}
+.pn{font-family:'Cormorant',serif;font-size:.85rem;color:var(--gold);padding-top:2px;font-style:italic}
+.ph{font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:.3rem}
+.pb{font-size:.82rem;color:var(--ink-3);line-height:1.68}
+
+/* deal card */
+.deal-card{background:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.dc-hd{
+  padding:1.5rem 1.6rem 1.25rem;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+}
+.dc-tag{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-3);margin-bottom:.5rem}
+.dc-name{font-family:'Cormorant',serif;font-size:1.25rem;color:var(--white);margin-bottom:.25rem;font-weight:400}
+.dc-loc{font-size:.75rem;color:rgba(255,255,255,.3)}
+.dc-body{padding:1.25rem 1.6rem}
+.dc-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:.82rem;
+}
+.dc-row:last-child{border-bottom:none}
+.dc-k{color:rgba(255,255,255,.35);font-weight:300}
+.dc-v{color:var(--white)}
+.dc-v.gold{color:var(--gold-3)}
+.dc-prog{padding:1.25rem 1.6rem 0;margin-bottom:1.4rem}
+.dcp-l{display:flex;justify-content:space-between;font-size:.72rem;color:rgba(255,255,255,.3);margin-bottom:.45rem}
+.dcp-track{height:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.dcp-fill{height:100%;background:var(--gold);transition:width 1.2s var(--ease-out)}
+.dc-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 1.6rem;background:var(--gold-dim);border-top:1px solid var(--gold-rule);
+}
+.dcf-ref{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28)}
+.dcf-live{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--gold-3);font-weight:500}
+.dcf-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-3);animation:dpulse 2s infinite}
+@keyframes dpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.3)}}
+
+.about-link{
+  display:inline-flex;align-items:center;gap:8px;margin-top:2rem;
+  font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--gold);border-bottom:1px solid var(--gold-rule);padding-bottom:3px;
+  transition:color var(--t1),border-color var(--t1);
+}
+.about-link span{transition:transform var(--t2) var(--ease-out)}
+.about-link:hover{color:var(--gold-2);border-color:var(--gold)}
+.about-link:hover span{transform:translateX(4px)}
+
+/* ═══════════════ HOW IT WORKS ═══════════════ */
+#how{
+  padding:var(--sec) 0;background:var(--g1);
+  border-top:1px solid var(--g2);border-bottom:1px solid var(--g2);
+}
+.how-tabs{
+  display:flex;border-bottom:1px solid var(--g2);margin-top:2.5rem;
+  overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.how-tabs::-webkit-scrollbar{display:none}
+.htab{
+  padding:11px 20px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+  font-weight:400;color:var(--ink-4);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;
+  transition:color var(--t1),border-color var(--t1);
+}
+.htab.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500}
+.htab:hover:not(.active){color:var(--ink-2)}
+.hpanel{display:none}
+.hpanel.active{display:block;animation:aup var(--t2) var(--ease-out)}
+.hsteps{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1px;background:var(--g2);margin-top:2.5rem;overflow:hidden;
+}
+.hstep{
+  background:var(--white);padding:1.85rem 1.5rem;
+  position:relative;overflow:hidden;transition:background var(--t2) var(--ease-out);
+}
+.hstep::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--gold-3));
+  transform:scaleX(0);transform-origin:left;transition:transform var(--t2) var(--ease-out);
+}
+.hstep:hover{background:var(--off)}
+.hstep:hover::before{transform:scaleX(1)}
+.hs-n{
+  font-family:'Cormorant',serif;font-size:2.4rem;color:var(--g2);
+  line-height:1;margin-bottom:.9rem;font-weight:300;transition:color var(--t2);
+}
+.hstep:hover .hs-n{color:var(--gold)}
+.hs-h{font-size:.9rem;font-weight:500;color:var(--ink);margin-bottom:.4rem}
+.hs-b{font-size:.8rem;color:var(--ink-3);line-height:1.7}
+
+/* ═══════════════ STRUCTURE ═══════════════ */
+#structure{padding:var(--sec) 0;background:var(--white)}
+.struct-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(2rem,5vw,5rem);margin-top:3rem;align-items:start;
+}
+.ptbl{width:100%;border-collapse:collapse;font-size:.875rem}
+.ptbl tr{border-bottom:1px solid var(--g2);transition:background var(--t1)}
+.ptbl tr:last-child{border-bottom:none}
+.ptbl tr:hover{background:var(--off)}
+.ptbl td{padding:.9rem .4rem}
+.ptbl td:first-child{color:var(--ink-3);font-size:.82rem}
+.ptbl td:last-child{text-align:right;font-family:'Cormorant',serif;font-size:1.1rem;color:var(--ink);font-weight:400}
+.law-tags{margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:.35rem}
+.law-tag{
+  font-size:.7rem;letter-spacing:.05em;background:var(--g1);color:var(--ink-3);
+  border:1px solid var(--g2);padding:4px 10px;transition:all var(--t1);
+}
+.law-tag:hover{background:var(--gold-pale);color:var(--gold);border-color:var(--gold-rule)}
+.wf-lbl{font-size:.82rem;color:var(--ink-3);margin-bottom:1.1rem}
+.wf-row{display:flex;align-items:center;gap:.85rem;margin-bottom:.55rem}
+.wf-n{
+  width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--white);
+  display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;
+}
+.wf-track{flex:1;height:26px;background:var(--g1);overflow:hidden;border:1px solid var(--g2)}
+.wf-bar{
+  height:100%;display:flex;align-items:center;padding:0 10px;
+  font-size:10px;font-weight:500;color:var(--white);white-space:nowrap;
+  width:0;transition:width 1.2s var(--ease-out);
+}
+.wf-pct{font-size:.78rem;color:var(--ink-3);min-width:46px;text-align:right}
+.wf-hi .wf-track{border-color:var(--gold-rule);background:var(--gold-dim)}
+.wf-hi .wf-bar{background:var(--gold)}
+.wf-hi .wf-pct{color:var(--gold);font-weight:600}
+.wf-hi .wf-n{background:var(--gold)}
+.reinvest{
+  margin-top:1.75rem;padding:1.2rem 1.3rem;
+  background:var(--off);border:1px solid var(--g2);border-left:3px solid var(--gold);
+}
+.ri-h{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);margin-bottom:.35rem}
+.ri-b{font-size:.82rem;color:var(--ink-3);line-height:1.65}
+
+/* ═══════════════ SECTORS ═══════════════ */
+#sectors{padding:var(--sec) 0;background:var(--g1);border-top:1px solid var(--g2)}
+.sgrid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--g2);margin-top:3rem;overflow:hidden;
+}
+.sc{
+  background:var(--white);padding:2rem 1.6rem;
+  position:relative;overflow:hidden;transition:background var(--t2) var(--ease-out);cursor:default;
+}
+.sc::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  transform:scaleX(0);transform-origin:left;transition:transform var(--t2) var(--ease-out);
+}
+.sc:hover{background:var(--gold-pale)}
+.sc:hover::after{transform:scaleX(1)}
+.sc-icon{
+  width:40px;height:40px;background:var(--g1);border:1px solid var(--g2);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:1.1rem;
+  transition:background var(--t2),border-color var(--t2);
+}
+.sc:hover .sc-icon{background:var(--gold-dim);border-color:var(--gold-rule)}
+.sc-name{font-size:.925rem;font-weight:500;color:var(--ink);margin-bottom:.35rem}
+.sc-desc{font-size:.78rem;color:var(--ink-4);line-height:1.65}
+
+/* ═══════════════ TESTIMONIALS ═══════════════ */
+#stories{padding:var(--sec) 0;background:var(--white)}
+.stories-scroll{
+  display:flex;gap:1.25rem;margin-top:2.8rem;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x mandatory;
+  padding-bottom:.75rem;
+}
+.stories-scroll::-webkit-scrollbar{display:none}
+.story-card{
+  background:var(--white);border:1px solid var(--g2);padding:1.75rem;
+  min-width:clamp(280px,75vw,320px);flex-shrink:0;scroll-snap-align:start;
+  transition:transform var(--t2) var(--ease-out),box-shadow var(--t2),border-color var(--t1);
+}
+.story-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.07);border-color:var(--g3)}
+.sq{
+  font-family:'Cormorant',serif;font-size:2.4rem;color:var(--gold);
+  opacity:.2;line-height:.7;margin-bottom:.4rem;
+}
+.st{font-size:.875rem;color:var(--ink-2);line-height:1.76;font-weight:300;margin-bottom:1.4rem}
+.sa{display:flex;align-items:center;gap:.75rem;padding-top:.9rem;border-top:1px solid var(--g2)}
+.sav{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--gold-pale);border:1px solid var(--gold-rule);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant',serif;font-size:.9rem;color:var(--gold);flex-shrink:0;font-style:italic;
+}
+.sn{font-size:.85rem;font-weight:500;color:var(--ink)}
+.sr{font-size:.73rem;color:var(--ink-5)}
+.skpi{margin-left:auto;text-align:right}
+.skv{font-family:'Cormorant',serif;font-size:1.3rem;color:var(--gold);line-height:1;font-weight:300}
+.skl{font-size:.68rem;color:var(--ink-5)}
+.sdots{display:flex;gap:6px;justify-content:center;margin-top:.9rem}
+.sdot{
+  width:5px;height:5px;border-radius:50%;background:var(--g3);cursor:pointer;border:none;padding:0;
+  transition:background var(--t1),transform var(--t1) var(--spring);
+}
+.sdot.active{background:var(--gold);transform:scale(1.5)}
+
+/* ═══════════════ CONTACT ═══════════════ */
+#contact{padding:var(--sec) 0;background:var(--g1);border-top:1px solid var(--g2)}
+.contact-grid{display:grid;grid-template-columns:1fr 1.5fr;gap:clamp(2rem,6vw,5.5rem);margin-top:3.5rem;align-items:start}
+.ci{display:flex;flex-direction:column;gap:1.8rem}
+.ci-lbl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem}
+.ci-line{width:22px;height:1px;background:var(--g3);margin:.3rem 0}
+.ci-val{font-size:.9rem;color:var(--ink-3);line-height:1.6}
+.ci-val a{color:var(--gold);transition:color var(--t1)}
+.ci-val a:hover{color:var(--gold-2)}
+.ci-box{padding:1rem 1.1rem;background:var(--white);border:1px solid var(--g2)}
+.ci-box-h{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;opacity:.75}
+.ci-box-b{font-size:.82rem;color:var(--ink-3);line-height:1.8}
+
+.form-box{background:var(--white);border:1px solid var(--g2);padding:clamp(1.5rem,3.5vw,2.25rem)}
+.ftabs{display:flex;background:var(--g1);padding:4px;gap:.35rem;margin-bottom:1.75rem}
+.ftab{
+  flex:1;padding:8px 8px;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;
+  cursor:pointer;color:var(--ink-4);font-weight:400;border:none;background:transparent;
+  transition:background var(--t1),color var(--t1),box-shadow var(--t1);
+}
+.ftab.active{background:var(--white);color:var(--ink);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.ftab:hover:not(.active){color:var(--ink-2)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.85rem}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+.flbl{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:500}
+.ff{
+  padding:10px 12px;border:1px solid var(--g2);font-size:.875rem;color:var(--ink);
+  background:var(--white);outline:none;width:100%;-webkit-appearance:none;
+  transition:border-color var(--t1),box-shadow var(--t1);
+}
+.ff:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(156,131,58,.1)}
+.ff::placeholder{color:var(--ink-5)}
+textarea.ff{resize:vertical;min-height:88px}
+.fconsent{display:flex;align-items:flex-start;gap:9px;margin-bottom:1.2rem;cursor:pointer}
+.fconsent input{width:15px;height:15px;margin-top:2px;accent-color:var(--gold);flex-shrink:0}
+.fconsent-lbl{font-size:.74rem;color:var(--ink-3);line-height:1.65}
+.fsubmit{
+  width:100%;padding:13px;background:var(--ink);color:var(--white);border:none;
+  font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:background var(--t1),transform var(--t1) var(--spring),box-shadow var(--t1);
+}
+.fsubmit:hover{background:var(--ink-2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.fsubmit.busy{pointer-events:none}
+.fsubmit.busy::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+  animation:shim 1.1s infinite;
+}
+@keyframes shim{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.ffine{font-size:.68rem;color:var(--ink-5);margin-top:.7rem;text-align:center;line-height:1.6}
+.fsuccess{display:none;text-align:center;padding:2.5rem 1rem}
+.fsuccess.on{display:block;animation:aup var(--t2) var(--ease-out)}
+.fsc-icon{
+  width:52px;height:52px;border-radius:50%;background:var(--gold-pale);border:1px solid var(--gold-rule);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.3rem;
+}
+.fsc-h{font-family:'Cormorant',serif;font-size:1.6rem;color:var(--ink);margin-bottom:.5rem;font-weight:300}
+.fsc-b{font-size:.875rem;color:var(--ink-3);line-height:1.72}
+
+/* ═══════════════ FOOTER ═══════════════ */
+footer{
+  background:var(--ink);padding:clamp(2.5rem,5vw,3.5rem) 0 0;
+  border-top:3px solid var(--gold);
+}
+.footer-grid{
+  max-width:var(--max);margin:0 auto;padding:0 var(--pad);
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:clamp(1.5rem,4vw,3rem);padding-bottom:2.5rem;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.fb-logo{margin-bottom:.9rem}
+/* Footer logo: PNG has black background — screen blend makes black invisible, gold/text glows through */
+.fb-logo-img{
+  height:28px;width:auto;
+  mix-blend-mode:screen;filter:brightness(1.1);
+}
+.fb-desc{font-size:.78rem;color:rgba(255,255,255,.28);line-height:1.72;max-width:220px}
+.fc-h{font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:.9rem}
+.fc-links{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.fc-links a{font-size:.78rem;color:rgba(255,255,255,.28);transition:color var(--t1)}
+.fc-links a:hover{color:var(--white)}
+.footer-mid{
+  max-width:var(--max);margin:0 auto;
+  padding:1.4rem var(--pad);display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:.7rem;color:rgba(255,255,255,.18);
+}
+/* ── NON-FSP DISCLOSURE — FOOTER ── */
+.fsp-block{
+  max-width:var(--max);margin:0 auto;
+  padding:1.25rem var(--pad) 2.25rem;
+  font-size:.7rem;color:rgba(255,255,255,.19);line-height:1.72;
+}
+.fsp-block strong{color:rgba(255,255,255,.32);font-weight:500}
+
+/* ═══════════════ SCROLL REVEAL ═══════════════ */
+.rv,.rvl,.rvs{opacity:0;transition:opacity var(--t3) var(--ease-out),transform var(--t3) var(--ease-out)}
+.rv{transform:translateY(22px)}.rvl{transform:translateX(-18px)}.rvs{transform:scale(.96)}
+.rv.in,.rvl.in,.rvs.in{opacity:1;transform:none}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}
+.d4{transition-delay:.28s}.d5{transition-delay:.35s}.d6{transition-delay:.42s}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:980px){
+  .hero-inner{grid-template-columns:1fr;padding-bottom:3rem;min-height:auto;padding-top:calc(var(--nav-h) + 3rem)}
+  .hero-right{display:none}
+  .hero-stats-m{display:grid}
+  .about-grid{grid-template-columns:1fr}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  .struct-grid{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem}
+  .sgrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .nav-links{display:none}.ham{display:flex}
+  .hero-h1 br{display:none}
+  .hero-btns{flex-direction:column}
+  .hero-btns .btn{width:100%;justify-content:center}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  .mc{padding:1.5rem 1rem}
+  .sgrid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr;gap:1.5rem}
+  .footer-mid{flex-direction:column;text-align:center}
+  .frow{grid-template-columns:1fr}
+  .ftabs{flex-wrap:wrap}
+  .ftab{min-width:75px;flex-shrink:0}
+  .stories-scroll{padding-left:1rem;padding-right:1rem}
+  .hero-vr,.hero-scroll{display:none}
+}
+@media(hover:none){.btn:active{transform:scale(.97)!important}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .rv,.rvl,.rvs{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav id="nav" aria-label="Main navigation">
+  <a href="#" class="nav-logo" aria-label="Scend Capital">
+    <img class="nav-logo-img" src="C:\Users\SMakhubu\Downloads\files (1)\scend-capital-site\scend-capital-site\assets\images\scend cap logo.png" alt="Scend Capital" height="38">
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="#about"     class="nl">About</a></li>
+    <li><a href="#how"       class="nl">Process</a></li>
+    <li><a href="#structure" class="nl">Structure</a></li>
+    <li><a href="#sectors"   class="nl">Sectors</a></li>
+    <li><a href="#stories"   class="nl">Testimonials</a></li>
+    <li><a href="#contact"   class="nl nav-cta">Enquire Now</a></li>
+  </ul>
+  <button class="ham" id="ham" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- mobile drawer -->
+<div id="mdrawer" aria-hidden="true">
+  <a href="#about">About</a>
+  <a href="#how">Process</a>
+  <a href="#structure">Structure</a>
+  <a href="#sectors">Sectors</a>
+  <a href="#stories">Testimonials</a>
+  <a href="#contact" class="m-gold">Enquire Now</a>
+</div>
+
+
+<!-- ════════ HERO ════════ -->
+<section id="hero">
+  <div class="hero-grid"  aria-hidden="true"></div>
+  <div class="hero-glow"  aria-hidden="true"></div>
+  <div class="hero-vr"    aria-hidden="true"></div>
+  <div class="hero-hr"    aria-hidden="true"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="he-line"></div>
+        <span class="he-text">Structured Micro-Capital · Gauteng, South Africa</span>
+      </div>
+      <h1 class="hero-h1">
+        Structured capital<br>
+        for the <em>informal<br>economy</em>
+      </h1>
+      <p class="hero-p">Scend Capital engineers transparent, legally sound micro-investment opportunities in Gauteng's informal-economy businesses — connecting investors with verifiable returns and entrepreneurs with the capital they cannot access elsewhere.</p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn btn-gold" id="h-inv">Invest with Scend Capital</a>
+        <a href="#contact" class="btn btn-ghost-w" id="h-ent">Apply for Capital</a>
+      </div>
+      <div class="hero-stats-m">
+        <div class="hsm"><div class="hsm-v"><span class="cv" data-t="25">0</span><em>%+</em></div><div class="hsm-l">Avg investor return</div></div>
+        <div class="hsm"><div class="hsm-v">R<span class="cv" data-t="2">0</span><em>K–10K</em></div><div class="hsm-l">Deal range</div></div>
+        <div class="hsm"><div class="hsm-v"><span class="cv" data-t="42">0</span></div><div class="hsm-l">Active investors</div></div>
+        <div class="hsm"><div class="hsm-v"><span class="cv" data-t="47">0</span></div><div class="hsm-l">Deals closed</div></div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="sr-label">Scend Capital — Key Metrics · 2025</div>
+      <div class="sr-items">
+        <div class="sr-item"><div class="sr-val"><span class="cv" data-t="25">0</span><em>%+</em></div><div class="sr-lbl">Average investor return per deal cycle</div></div>
+        <div class="sr-item"><div class="sr-val">R <span class="cv" data-t="2">0</span><em>K – R10K</em></div><div class="sr-lbl">Capital deployment range per deal</div></div>
+        <div class="sr-item"><div class="sr-val"><span class="cv" data-t="42">0</span></div><div class="sr-lbl">Verified active investors</div></div>
+        <div class="sr-item"><div class="sr-val"><span class="cv" data-t="47">0</span></div><div class="sr-lbl">Deals successfully closed since 2023</div></div>
+        <div class="sr-item"><div class="sr-val">5</div><div class="sr-lbl">Business days — maximum settlement window</div></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ════════ METRICS BAND ════════ -->
+<section id="metrics">
+  <div class="metrics-grid">
+    <div class="mc rv"><div class="mc-val">R<span class="cv2" data-t="187">0</span><span class="mcu">K</span></div><div class="mc-lbl">Capital Deployed YTD</div><div class="mc-note">2025 financial year</div></div>
+    <div class="mc rv d1"><div class="mc-val">R<span class="cv2" data-t="48">0</span><span class="mcu">K</span></div><div class="mc-lbl">Profit Generated YTD</div><div class="mc-note">All closed deals</div></div>
+    <div class="mc rv d2"><div class="mc-val"><span class="cv2" data-t="5">0</span></div><div class="mc-lbl">Business Day Settlement</div><div class="mc-note">Maximum distribution time</div></div>
+    <div class="mc rv d3"><div class="mc-val"><span class="cv2" data-t="26">0</span></div><div class="mc-lbl">Standardised Documents</div><div class="mc-note">Full operational framework</div></div>
+  </div>
+</section>
+
+<!-- ════════ ABOUT ════════ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <div class="sec-tag rv"><div class="stl"></div><span class="stt">About Scend Capital</span></div>
+        <h2 class="sec-h rv d1">Capital deployed<br>with <em>precision</em></h2>
+        <p class="sec-sub rv d2" style="margin-bottom:2rem">We identify, structure, and fund high-potential informal businesses across Gauteng — connecting everyday investors with short-term, asset-light opportunities and giving entrepreneurs the working capital that formal institutions consistently decline to provide.<br><br>Every deal is governed by signed South African legal agreements, monitored weekly, and settled within five business days of close.</p>
+        <a href="#contact" class="about-link rv d3">Learn more about our process <span>→</span></a>
+        <div style="margin-top:2rem">
+          <div class="pillar rv d3"><div class="pn">01</div><div><div class="ph">Rigorous deal origination</div><div class="pb">Every business passes a 7-criterion risk scorecard and in-person site visit before any capital is committed.</div></div></div>
+          <div class="pillar rv d4"><div class="pn">02</div><div><div class="ph">Legally binding structure</div><div class="pb">Commandant Partnership Agreements and Profit Share Agreements — SA common law — define every obligation before a rand moves.</div></div></div>
+          <div class="pillar rv d5"><div class="pn">03</div><div><div class="ph">Full-cycle transparency</div><div class="pb">Verified weekly revenue reports. Friday investor updates. Every transaction documented and auditable.</div></div></div>
+          <div class="pillar rv d6"><div class="pn">04</div><div><div class="ph">Prompt settlement</div><div class="pb">Capital and profit share transferred within 5 business days of close with an itemised Settlement Statement.</div></div></div>
+        </div>
+      </div>
+      <div class="rvs d2">
+        <div class="deal-card">
+          <div class="dc-hd">
+            <div class="dc-tag">Live Deal · SC-0087</div>
+            <div class="dc-name">Mama Thandi's Kitchen</div>
+            <div class="dc-loc">Tembisa, Ekurhuleni · Food &amp; Catering · Est. 2021</div>
+          </div>
+          <div class="dc-body">
+            <div class="dc-row"><span class="dc-k">Deal stage</span><span class="dc-v" style="color:#4ade80">● Week 3 of 6 — Active</span></div>
+            <div class="dc-row"><span class="dc-k">Capital deployed</span><span class="dc-v">R 10,000</span></div>
+            <div class="dc-row"><span class="dc-k">Participating investors</span><span class="dc-v">3</span></div>
+            <div class="dc-row"><span class="dc-k">Cumulative revenue</span><span class="dc-v">R 14,200</span></div>
+            <div class="dc-row"><span class="dc-k">Projected investor ROI</span><span class="dc-v gold">28–32%</span></div>
+            <div class="dc-row"><span class="dc-k">Estimated settlement</span><span class="dc-v">21 May 2025</span></div>
+          </div>
+          <div class="dc-prog">
+            <div class="dcp-l"><span>Weekly target attainment</span><span>71%</span></div>
+            <div class="dcp-track"><div class="dcp-fill" data-w="71"></div></div>
+          </div>
+          <div class="dc-foot">
+            <span class="dcf-ref">Ref: SC-CPA-0087</span>
+            <span class="dcf-live"><span class="dcf-dot"></span>Active Deal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ HOW IT WORKS ════════ -->
+<section id="how">
+  <div class="wrap">
+    <div class="sec-tag rv"><div class="stl"></div><span class="stt">Our Process</span></div>
+    <h2 class="sec-h rv d1">A clear path to <em>returns</em></h2>
+    <p class="sec-sub rv d2">Three participant types. One disciplined framework. Every step documented and legally enforceable.</p>
+    <div class="how-tabs rv d2">
+      <button class="htab active" data-tab="inv">For Investors</button>
+      <button class="htab" data-tab="ent">For Entrepreneurs</button>
+      <button class="htab" data-tab="scout">For Deal Scouts</button>
+    </div>
+    <div>
+      <div class="hpanel active" id="panel-inv">
+        <div class="hsteps">
+          <div class="hstep"><div class="hs-n">01</div><div class="hs-h">FICA &amp; Onboarding</div><div class="hs-b">Complete KYC verification — certified ID, proof of address, POPIA consent, Risk Disclosure signature. Under 15 minutes.</div></div>
+          <div class="hstep"><div class="hs-n">02</div><div class="hs-h">Review Prospectuses</div><div class="hs-b">Receive deal prospectuses (SC-PROS) with business profiles, risk scores, projected returns, and subscription parameters.</div></div>
+          <div class="hstep"><div class="hs-n">03</div><div class="hs-h">Execute Agreement</div><div class="hs-b">Sign the Commandant Partnership Agreement (SC-CPA) and EFT R 500–R 10,000 using the deal reference number.</div></div>
+          <div class="hstep"><div class="hs-n">04</div><div class="hs-h">Monitor Weekly</div><div class="hs-b">Receive verified revenue reports every Friday — full visibility on revenue, COGS, and profit for the cycle duration.</div></div>
+          <div class="hstep"><div class="hs-n">05</div><div class="hs-h">Receive Distribution</div><div class="hs-b">Capital and profit share transferred within 5 business days of close, with a full Settlement Statement (SC-DSS).</div></div>
+        </div>
+      </div>
+      <div class="hpanel" id="panel-ent">
+        <div class="hsteps">
+          <div class="hstep"><div class="hs-n">01</div><div class="hs-h">Business Assessment</div><div class="hs-b">A scout visits, verifies 4 weeks of trading history, and scores your business on 7 criteria out of 35.</div></div>
+          <div class="hstep"><div class="hs-n">02</div><div class="hs-h">Deal Structuring</div><div class="hs-b">Capital amount, duration (4–12 weeks), profit share %, and reporting obligations confirmed in a signed Profit Share Agreement.</div></div>
+          <div class="hstep"><div class="hs-n">03</div><div class="hs-h">Capital Disbursement</div><div class="hs-b">Capital EFT'd to your account. Proof of expenditure within 3 business days confirms proper deployment.</div></div>
+          <div class="hstep"><div class="hs-n">04</div><div class="hs-h">Weekly Reporting</div><div class="hs-b">Submit a simple revenue form every Friday. Scend Capital calculates its share — you retain the contracted balance.</div></div>
+          <div class="hstep"><div class="hs-n">05</div><div class="hs-h">Close &amp; Scale</div><div class="hs-b">Strong operators receive priority access to larger deals and repeat funding rounds. Build your track record.</div></div>
+        </div>
+      </div>
+      <div class="hpanel" id="panel-scout">
+        <div class="hsteps">
+          <div class="hstep"><div class="hs-n">01</div><div class="hs-h">Sign Agreements</div><div class="hs-b">Execute the Scout Commission Agreement (SC-DSC) and NDA. Independent contractor on your own schedule.</div></div>
+          <div class="hstep"><div class="hs-n">02</div><div class="hs-h">Identify Prospects</div><div class="hs-b">Source informal businesses in Gauteng with 4+ weeks of trading and capital needs of R 2,000–R 10,000.</div></div>
+          <div class="hstep"><div class="hs-n">03</div><div class="hs-h">Submit Assessment</div><div class="hs-b">Complete the DIA Form (SC-DIA) with 7-criterion scoring, site visit photos, and operator identification documents.</div></div>
+          <div class="hstep"><div class="hs-n">04</div><div class="hs-h">Earn Commission</div><div class="hs-b">Deployment commission on activation + performance bonus on successful close. Paid within 5 business days.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ STRUCTURE ════════ -->
+<section id="structure">
+  <div class="wrap">
+    <div class="sec-tag rv"><div class="stl"></div><span class="stt">Investment Parameters</span></div>
+    <h2 class="sec-h rv d1">The <em>framework</em></h2>
+    <p class="sec-sub rv d2">Every deal adheres to the same standardised structure — transparent, enforceable, and designed so all parties succeed.</p>
+    <div class="struct-grid">
+      <div class="rv d2">
+        <table class="ptbl">
+          <tr><td>Minimum deal size</td><td>R 2,000</td></tr>
+          <tr><td>Maximum deal size</td><td>R 10,000</td></tr>
+          <tr><td>Minimum investor participation</td><td>R 500</td></tr>
+          <tr><td>Maximum investor participation</td><td>R 10,000</td></tr>
+          <tr><td>Typical deal duration</td><td>4 – 12 weeks</td></tr>
+          <tr><td>Target investor return</td><td>15% – 35% of net profit</td></tr>
+          <tr><td>Management fee (Scend Capital)</td><td>10% of gross profit</td></tr>
+          <tr><td>Capital settlement</td><td>Within 5 business days</td></tr>
+          <tr><td>Geographic focus</td><td>Gauteng Province, RSA</td></tr>
+        </table>
+        <div class="law-tags">
+          <span class="law-tag">Companies Act 71/2008</span>
+          <span class="law-tag">NCA 34/2005</span>
+          <span class="law-tag">POPIA 4/2013</span>
+          <span class="law-tag">FICA 38/2001</span>
+          <span class="law-tag">FAIS 37/2002</span>
+          <span class="law-tag">SA Common Law</span>
+          <span class="law-tag">Prescription Act 68/1969</span>
+        </div>
+      </div>
+      <div class="rv d3">
+        <p class="wf-lbl">Profit allocation waterfall — applied in strict priority order:</p>
+        <div id="wf">
+          <div class="wf-row"><div class="wf-n">1</div><div class="wf-track"><div class="wf-bar" data-w="50" style="background:var(--ink-3)">COGS (operator deduction)</div></div><div class="wf-pct">Variable</div></div>
+          <div class="wf-row"><div class="wf-n">2</div><div class="wf-track"><div class="wf-bar" data-w="10" style="background:var(--gold-2)">Management fee</div></div><div class="wf-pct">10%</div></div>
+          <div class="wf-row"><div class="wf-n">3</div><div class="wf-track"><div class="wf-bar" data-w="30" style="background:var(--gold)">Investor pool (pro-rata)</div></div><div class="wf-pct">15–40%</div></div>
+          <div class="wf-row"><div class="wf-n">4</div><div class="wf-track"><div class="wf-bar" data-w="42" style="background:var(--g4)">Operator retained profit</div></div><div class="wf-pct">Balance</div></div>
+          <div class="wf-row wf-hi"><div class="wf-n">5</div><div class="wf-track"><div class="wf-bar" data-w="100">Capital returned to investors</div></div><div class="wf-pct">100%</div></div>
+        </div>
+        <div class="reinvest">
+          <div class="ri-h">Reinvestment Option</div>
+          <div class="ri-b">Investors may reinvest their total return into the next available deal — with priority placement — by notifying Scend Capital at least 2 business days before the subscription close date.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTORS ════════ -->
+<section id="sectors">
+  <div class="wrap">
+    <div class="sec-tag rv"><div class="stl"></div><span class="stt">Target Sectors</span></div>
+    <h2 class="sec-h rv d1">Where we <em>deploy</em></h2>
+    <p class="sec-sub rv d2">Sectors where verified demand, rapid turnover, and direct operator accountability produce consistent, measurable returns across Gauteng's township and peri-urban economy.</p>
+    <div class="sgrid rv d3">
+      <div class="sc"><div class="sc-icon">🍽️</div><div class="sc-name">Food &amp; Catering</div><div class="sc-desc">Spaza shops · township restaurants · catering operations · school tuck shops · street food</div></div>
+      <div class="sc"><div class="sc-icon">✂️</div><div class="sc-name">Beauty &amp; Personal Care</div><div class="sc-desc">Hair salons · barber shops · nail technicians · mobile beauty professionals</div></div>
+      <div class="sc"><div class="sc-icon">🔧</div><div class="sc-name">Repairs &amp; Technical</div><div class="sc-desc">Phone repairs · appliance services · auto spares · shoe repair · electrical work</div></div>
+      <div class="sc"><div class="sc-icon">🛒</div><div class="sc-name">Retail &amp; General Trade</div><div class="sc-desc">General dealers · clothing &amp; accessories · hardware · second-hand goods · market traders</div></div>
+      <div class="sc"><div class="sc-icon">🧵</div><div class="sc-name">Artisanal &amp; Creative</div><div class="sc-desc">Sewing &amp; tailoring · crafts · printing &amp; signage · furniture making · custom clothing</div></div>
+      <div class="sc"><div class="sc-icon">🚛</div><div class="sc-name">Logistics &amp; Transport</div><div class="sc-desc">Last-mile delivery · hire services · moving operations · courier intermediaries</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ TESTIMONIALS ════════ -->
+<section id="stories">
+  <div class="wrap">
+    <div class="sec-tag rv"><div class="stl"></div><span class="stt">Testimonials</span></div>
+    <h2 class="sec-h rv d1">What our partners <em>say</em></h2>
+    <p class="sec-sub rv d2">Verified accounts from investors, operators, and scouts. Names withheld in accordance with POPIA 4/2013.</p>
+  </div>
+  <div style="overflow:hidden">
+    <div class="stories-scroll" id="sstk" style="padding-left:var(--pad);padding-right:var(--pad)">
+      <div class="story-card"><div class="sq">"</div><p class="st">The weekly reporting structure gave me complete confidence throughout the cycle. Settlement was processed two days before the stated deadline. I have since participated in three further deals.</p><div class="sa"><div class="sav">T</div><div><div class="sn">Thabo M.</div><div class="sr">Investor · Midrand, Gauteng</div></div><div class="skpi"><div class="skv">31%</div><div class="skl">ROI · 8 weeks</div></div></div></div>
+      <div class="story-card"><div class="sq">"</div><p class="st">No bank would consider us. Scend Capital had capital in our account within five days of signing. The profit share was fair and the contract was unambiguous on every obligation.</p><div class="sa"><div class="sav">Z</div><div><div class="sn">Zanele N.</div><div class="sr">Operator · Soweto, Gauteng</div></div><div class="skpi"><div class="skv">R 8K</div><div class="skl">Capital received</div></div></div></div>
+      <div class="story-card"><div class="sq">"</div><p class="st">As a retiree I needed short-duration, higher-yield instruments. Six deals completed — not a single late payment. I always know precisely where my capital is.</p><div class="sa"><div class="sav">P</div><div><div class="sn">Priya D.</div><div class="sr">Investor · Pretoria, Gauteng</div></div><div class="skpi"><div class="skv">6</div><div class="skl">Deals completed</div></div></div></div>
+      <div class="story-card"><div class="sq">"</div><p class="st">I assess businesses in my community as a scout. The scoring form takes 20 minutes on my phone at the site. Commission payments arrive on schedule, every time.</p><div class="sa"><div class="sav">K</div><div><div class="sn">Kagiso S.</div><div class="sr">Deal Scout · Tembisa, Gauteng</div></div><div class="skpi"><div class="skv">R 3,450</div><div class="skl">Commissions earned</div></div></div></div>
+      <div class="story-card"><div class="sq">"</div><p class="st">The capital allowed me to acquire equipment I could not afford outright. Client volume grew fourfold. The settlement was exactly as projected in the prospectus.</p><div class="sa"><div class="sav">V</div><div><div class="sn">Vusi N.</div><div class="sr">Operator · Johannesburg South</div></div><div class="skpi"><div class="skv">4×</div><div class="skl">Revenue growth</div></div></div></div>
+    </div>
+    <div class="sdots" id="sdots" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ════════ CONTACT ════════ -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-tag rv"><div class="stl"></div><span class="stt">Get In Touch</span></div>
+    <h2 class="sec-h rv d1">Begin your <em>enquiry</em></h2>
+    <p class="sec-sub rv d2">Whether you are an investor seeking deal access, an entrepreneur requiring capital, or a prospective deal scout — complete the form and we will respond within 2 business days.</p>
+    <div class="contact-grid">
+      <div class="ci rv d2">
+        <div><div class="ci-lbl">Registered Address</div><div class="ci-line"></div><div class="ci-val">15 Chris Kruger Street<br>Norkem Park, Ekurhuleni<br>Gauteng, 1618, South Africa</div></div>
+        <div><div class="ci-lbl">General Enquiries</div><div class="ci-line"></div><div class="ci-val"><a href="mailto:info@scendcapital.co.za">info@scendcapital.co.za</a></div></div>
+        <div><div class="ci-lbl">Deal Desk</div><div class="ci-line"></div><div class="ci-val"><a href="mailto:deals@scendcapital.co.za">deals@scendcapital.co.za</a></div></div>
+        <div><div class="ci-lbl">WhatsApp</div><div class="ci-line"></div><div class="ci-val">060 848 2220</div></div>
+        <div class="ci-box"><div class="ci-box-h">Office Hours</div><div class="ci-box-b">Monday – Friday &nbsp;&nbsp; 08:00 – 17:00<br>Saturday &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 09:00 – 13:00<br>Public holidays &nbsp;&nbsp;&nbsp;&nbsp; Closed</div></div>
+      </div>
+      <div class="rv d3">
+        <div class="form-box">
+          <div class="ftabs">
+            <button class="ftab active" data-type="investor"     onclick="sType('investor',this)">Investor</button>
+            <button class="ftab"         data-type="entrepreneur" onclick="sType('entrepreneur',this)">Entrepreneur</button>
+            <button class="ftab"         data-type="scout"        onclick="sType('scout',this)">Deal Scout</button>
+            <button class="ftab"         data-type="general"      onclick="sType('general',this)">General</button>
+          </div>
+          <form id="cf" novalidate onsubmit="doSubmit(event)">
+            <div class="frow">
+              <div class="fg"><label class="flbl">First Name *</label><input class="ff" type="text" placeholder="Sipho" required autocomplete="given-name"></div>
+              <div class="fg"><label class="flbl">Last Name *</label><input class="ff" type="text" placeholder="Dlamini" required autocomplete="family-name"></div>
+            </div>
+            <div class="fg"><label class="flbl">Email Address *</label><input class="ff" type="email" placeholder="sipho@example.com" required autocomplete="email"></div>
+            <div class="fg"><label class="flbl">Mobile / WhatsApp</label><input class="ff" type="tel" placeholder="07X XXX XXXX" autocomplete="tel"></div>
+            <div class="fg" id="fp" style="display:none"><label class="flbl">Province</label><select class="ff"><option value="">Select province</option><option>Gauteng</option><option>Limpopo</option><option>Mpumalanga</option><option>North West</option><option>Other</option></select></div>
+            <div class="fg" id="fa" style="display:none"><label class="flbl" id="albl">Investment amount</label><select class="ff"><option value="">Select range</option><option>R 500 – R 2,000</option><option>R 2,001 – R 5,000</option><option>R 5,001 – R 10,000</option><option>Multiple deals (R 10,000+)</option></select></div>
+            <div class="fg" id="fb" style="display:none"><label class="flbl">Business Name &amp; Type</label><input class="ff" type="text" placeholder="e.g. Nomsa's Hair Studio — Beauty Services"></div>
+            <div class="fg" id="fl" style="display:none"><label class="flbl">Business Location</label><input class="ff" type="text" placeholder="e.g. Tembisa, Gauteng"></div>
+            <div class="fg"><label class="flbl">Message</label><textarea class="ff" placeholder="Please describe your enquiry and what you are seeking to achieve…"></textarea></div>
+            <label class="fconsent"><input type="checkbox" required><span class="fconsent-lbl">I consent to Scend Capital processing my personal information for the purposes of this enquiry in accordance with the Protection of Personal Information Act 4 of 2013 (POPIA). *</span></label>
+            <button type="submit" class="fsubmit" id="fsub">Submit Enquiry →</button>
+            <p class="ffine">By submitting you acknowledge that Scend Capital is not a licensed Financial Services Provider and this does not constitute financial advice or a commitment to invest or lend.</p>
+          </form>
+          <div class="fsuccess" id="fsucc">
+            <div class="fsc-icon">✦</div>
+            <h3 class="fsc-h">Enquiry Received</h3>
+            <p class="fsc-b">Thank you for contacting Scend Capital. A member of our team will respond within 2 business days.<br><br>Please reference your email address in any follow-up correspondence.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FOOTER ════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="fb-logo">
+        <img class="fb-logo-img" src="C:\Users\SMakhubu\Downloads\scend cap.png" height="28">
+      </div>
+      <p class="fb-desc">Connecting investors with informal-economy businesses through rigorous, transparent, legally structured profit-share deals across Gauteng Province, South Africa.</p>
+    </div>
+    <div><div class="fc-h">Company</div><ul class="fc-links"><li><a href="#about">About us</a></li><li><a href="#how">Our process</a></li><li><a href="#sectors">Sectors</a></li><li><a href="#stories">Testimonials</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div><div class="fc-h">Investors</div><ul class="fc-links"><li><a href="#structure">Deal parameters</a></li><li><a href="#contact">Register interest</a></li><li><a href="#contact">FICA verification</a></li><li><a href="#contact">Risk disclosure</a></li><li><a href="#contact">Annual statements</a></li></ul></div>
+    <div><div class="fc-h">Entrepreneurs</div><ul class="fc-links"><li><a href="#how">Apply for capital</a></li><li><a href="#sectors">Eligible sectors</a></li><li><a href="#structure">Deal structure</a></li><li><a href="#contact">Become a scout</a></li><li><a href="#contact">Get in touch</a></li></ul></div>
+  </div>
+  <div class="footer-mid">
+    <span>© 2025 Scend Capital · 15 Chris Kruger Street, Norkem Park, 1618, Gauteng</span>
+    <span>info@scendcapital.co.za</span>
+  </div>
+  <!-- NON-FSP DISCLOSURE — FOOTER ONLY -->
+  <div class="fsp-block" role="note">
+    <strong>Legal &amp; Regulatory Disclosure:</strong> Scend Capital is not a licensed Financial Services Provider (FSP) under the Financial Advisory and Intermediary Services Act 37 of 2002 (FAIS Act). This website does not constitute financial advice, a solicitation for regulated financial products, or an offer of securities. All investments involve risk; past performance does not guarantee future results; capital contributed is not guaranteed. All transactions are governed by South African common law and the Companies Act 71 of 2008. Personal information is processed in accordance with the Protection of Personal Information Act 4 of 2013 (POPIA). Compliance with the Financial Intelligence Centre Act 38 of 2001 (FICA) is required for all investors prior to participation in any deal. Investors are encouraged to seek independent financial and legal advice before investing.
+  </div>
+</footer>
+
+<script>
+/* ── NAV scroll + hide ── */
+const nav=document.getElementById('nav');
+let lastY=0,busy=false;
+const onScroll=()=>{
+  const y=window.scrollY;
+  nav.classList.toggle('scrolled',y>60);
+  if(y>400) nav.classList.toggle('hide',y>lastY+6);
+  else nav.classList.remove('hide');
+  lastY=Math.max(0,y);busy=false;
+};
+window.addEventListener('scroll',()=>{if(!busy){requestAnimationFrame(onScroll);busy=true;}},{passive:true});
+
+/* ── Hamburger ── */
+const ham=document.getElementById('ham'),drawer=document.getElementById('mdrawer');
+const toggle=open=>{
+  document.body.classList.toggle('mopen',open);
+  ham.setAttribute('aria-expanded',open);
+  drawer.setAttribute('aria-hidden',!open);
+  document.body.style.overflow=open?'hidden':'';
+};
+ham.addEventListener('click',()=>toggle(!document.body.classList.contains('mopen')));
+drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggle(false)));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')toggle(false);});
+
+/* ── How tabs ── */
+document.querySelectorAll('.htab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.htab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.hpanel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+/* ── Form type ── */
+function sType(type,btn){
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ['fp','fa','fb','fl'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const al=document.getElementById('albl');
+  if(type==='investor'){show('fp');show('fa');if(al)al.textContent='Investment amount';}
+  if(type==='entrepreneur'){show('fb');show('fl');show('fa');if(al)al.textContent='Capital required (R)';}
+  if(type==='scout'){show('fp');show('fl');}
+}
+function show(id){const el=document.getElementById(id);if(el)el.style.display='flex';}
+
+/* ── Form submit ── 
+   Handled by assets/js/forms.js (Google Sheets integration)
+   Fallback defined here if forms.js fails to load ── */
+function doSubmit(e){
+  e.preventDefault();
+  const form=e.target,btn=document.getElementById('fsub');
+  if(!form.checkValidity()){form.reportValidity();return;}
+  btn.classList.add('busy');btn.textContent='Submitting…';
+  // forms.js will override this with Google Sheets submission
+  if(typeof window.scendSubmitForm === 'function'){
+    window.scendSubmitForm(e, form, btn);
+  } else {
+    setTimeout(()=>{
+      form.style.cssText='opacity:0;transform:translateY(-8px);transition:all .3s';
+      setTimeout(()=>{form.style.display='none';document.getElementById('fsucc').classList.add('on');},320);
+    },1100);
+  }
+}
+
+/* ── CTA pre-select ── */
+document.getElementById('h-inv').addEventListener('click',()=>
+  setTimeout(()=>{const b=document.querySelector('[data-type="investor"]');if(b)sType('investor',b);},450));
+document.getElementById('h-ent').addEventListener('click',()=>
+  setTimeout(()=>{const b=document.querySelector('[data-type="entrepreneur"]');if(b)sType('entrepreneur',b);},450));
+
+/* ── Scroll reveal ── */
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target);}});
+},{threshold:.1,rootMargin:'0px 0px -36px 0px'});
+document.querySelectorAll('.rv,.rvl,.rvs').forEach(el=>ro.observe(el));
+
+/* ── Counter animation ── */
+function animCount(el,target,dur=1100){
+  let start;
+  const step=ts=>{
+    if(!start)start=ts;
+    const p=Math.min((ts-start)/dur,1);
+    el.textContent=Math.round(p*target);
+    if(p<1)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const heroObs=new IntersectionObserver(en=>{
+  if(en[0].isIntersecting){document.querySelectorAll('.cv').forEach(el=>animCount(el,parseInt(el.dataset.t)));heroObs.disconnect();}
+},{threshold:.35});
+const hl=document.querySelector('.hero-left');
+if(hl)heroObs.observe(hl);
+
+const mObs=new IntersectionObserver(en=>{
+  if(en[0].isIntersecting){document.querySelectorAll('.cv2').forEach(el=>animCount(el,parseInt(el.dataset.t)));mObs.disconnect();}
+},{threshold:.3});
+const mb=document.getElementById('metrics');
+if(mb)mObs.observe(mb);
+
+/* ── Waterfall bars ── */
+const wfObs=new IntersectionObserver(en=>{
+  if(en[0].isIntersecting){
+    document.querySelectorAll('.wf-bar').forEach(bar=>{
+      const w=bar.dataset.w+'%';bar.style.width='0';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{bar.style.width=w;}));
+    });
+    wfObs.disconnect();
+  }
+},{threshold:.3});
+const wfEl=document.getElementById('wf');
+if(wfEl)wfObs.observe(wfEl);
+
+/* ── Deal card progress ── */
+const pbObs=new IntersectionObserver(en=>{
+  en.forEach(e=>{
+    if(e.isIntersecting){
+      const fill=e.target.querySelector('.dcp-fill');
+      if(fill){fill.style.width='0';requestAnimationFrame(()=>requestAnimationFrame(()=>{fill.style.width=fill.dataset.w+'%';}));}
+      pbObs.unobserve(e.target);
+    }
+  });
+},{threshold:.4});
+document.querySelectorAll('.dc-prog').forEach(el=>pbObs.observe(el));
+
+/* ── Story dots ── */
+const sstk=document.getElementById('sstk'),sdotsWrap=document.getElementById('sdots');
+const stCards=sstk?Array.from(sstk.querySelectorAll('.story-card')):[];
+if(stCards.length&&sdotsWrap){
+  stCards.forEach((_,i)=>{
+    const d=document.createElement('button');
+    d.className='sdot'+(i===0?' active':'');
+    d.setAttribute('aria-label','Story '+(i+1));
+    d.addEventListener('click',()=>sstk.scrollTo({left:stCards[i].offsetLeft-sstk.offsetLeft,behavior:'smooth'}));
+    sdotsWrap.appendChild(d);
+  });
+  const dots=sdotsWrap.querySelectorAll('.sdot');
+  sstk.addEventListener('scroll',()=>{
+    const i=Math.round(sstk.scrollLeft/(stCards[0].offsetWidth+20));
+    dots.forEach((d,j)=>d.classList.toggle('active',i===j));
+  },{passive:true});
+}
+
+/* ── Smooth scroll ── */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const href=a.getAttribute('href');if(href==='#')return;
+    e.preventDefault();
+    const tgt=document.querySelector(href);
+    if(tgt)window.scrollTo({top:tgt.getBoundingClientRect().top+window.scrollY-76,behavior:'smooth'});
+  });
+});
+</script>
+  <script src="assets/js/forms.js"></script>
+</body>
+</html>
